@@ -111,39 +111,27 @@ bool InstanceReset::OnGossipHello(Player* player, Creature* creature)
             case 1:
             {
                 if (player->HasItemCount(token, count, true))
-                {
                     AddGossipItemFor(player, GOSSIP_ICON_CHAT, gossipText, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                }
                 else
-                {
                     creature->Whisper("You do not have the required items or token.", LANG_UNIVERSAL, player);
-                }
                 break;
             }
 
             case 2:
             {
                 if (player->GetMoney() >= money)
-                {
                     AddGossipItemFor(player, GOSSIP_ICON_CHAT, gossipText, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                }
                 else
-                {
                     creature->Whisper("You don't have enough money.", LANG_UNIVERSAL, player);
-                }
                 break;
             }
 
             case 3:
             {
                 if ((player->HasItemCount(token, count, true)) && ((player->GetMoney() >= money)))
-                {
                     AddGossipItemFor(player, GOSSIP_ICON_CHAT, gossipText, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-                }
                 else
-                {
                     creature->Whisper("The reset requires a token and money.", LANG_UNIVERSAL, player);
-                }
                 break;
             }
 
