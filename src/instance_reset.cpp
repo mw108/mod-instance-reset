@@ -171,21 +171,19 @@ bool InstanceReset::OnGossipSelect(Player* player, Creature* creature, uint32 /*
 
         for (uint8 i = 0; i < diff; ++i)
         {
-            for (std::vector<Player *>::iterator member = members.begin(); member != members.end(); ++member)
+            for (std::vector<Player *>::iterator member_itr = members.begin(); member_itr != members.end(); ++member_itr)
             {
-                if (*member)
+                Player *member = member_itr->first;
+                BoundInstancesMap const &m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(member->GetGUID(), Difficulty(i));
+                for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();)
                 {
-                    BoundInstancesMap const &m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(member->GetGUID(), Difficulty(i));
-                    for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();)
+                    if (itr->first != member->GetMapId())
                     {
-                        if (itr->first != member->GetMapId())
-                        {
-                            sInstanceSaveMgr->PlayerUnbindInstance(member->GetGUID(), itr->first, Difficulty(i), true, member);
-                            itr = m_boundInstances.begin();
-                        }
-                        else
-                            ++itr;
+                        sInstanceSaveMgr->PlayerUnbindInstance(member->GetGUID(), itr->first, Difficulty(i), true, member);
+                        itr = m_boundInstances.begin();
                     }
+                    else
+                        ++itr;
                 }
             }
         }
