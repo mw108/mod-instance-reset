@@ -158,7 +158,7 @@ bool InstanceReset::OnGossipSelect(Player* player, Creature* creature, uint32 /*
         std::vector<Player *> members;
         members.push_back(player);
         
-        Group *group = GetGroup();
+        Group *group = player->GetGroup();
         if (group)
         {
             for (GroupReference *itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
