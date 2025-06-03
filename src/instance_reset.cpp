@@ -173,7 +173,7 @@ bool InstanceReset::OnGossipSelect(Player* player, Creature* creature, uint32 /*
         {
             for (std::vector<Player *>::iterator member_itr = members.begin(); member_itr != members.end(); ++member_itr)
             {
-                Player *member = member_itr->Get();
+                Player *member = member_itr->first;
                 BoundInstancesMap const &m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(member->GetGUID(), Difficulty(i));
                 for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();)
                 {
