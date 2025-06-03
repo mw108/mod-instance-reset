@@ -165,17 +165,19 @@ bool InstanceReset::OnGossipSelect(Player* player, Creature* creature, uint32 /*
             {
                 Player *member = itr->GetSource();
                 if (member)
+                {
                     members.push_back(member);
+                    LOG_DEBUG("server.worldserver", "InstanceReset::OnGossipSelect: member added: {}", member->GetName());
+                }
             }
         }
 
-
-
         for (uint8 i = 0; i < diff; ++i)
         {
-            for (size_t i = 0; i < members.size(); ++i)
+            for (uint8 j = 0; j < members.size(); ++j)
             {
-                Player *member = members[i];
+                Player *member = members[j];
+                LOG_DEBUG("server.worldserver", "InstanceReset::OnGossipSelect: resetting for member ({}) {} diffictulty {}", j, member->GetName(), i);
                 BoundInstancesMap const &m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(member->GetGUID(), Difficulty(i));
                 for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();)
                 {
