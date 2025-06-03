@@ -155,18 +155,38 @@ bool InstanceReset::OnGossipSelect(Player* player, Creature* creature, uint32 /*
         if (!(sConfigMgr->GetOption<bool>("instanceReset.NormalModeOnly", true)))
             diff = MAX_DIFFICULTY;
 
+        std::vector<Player *> members;
+        members.push_back(player);
+        
+        Group *group = GetGroup();
+        if (group)
+        {
+            for (GroupReference *itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
+            {
+                Player *member = itr->GetSource();
+                if (member)
+                    members.push_back(member);
+            }
+        }
+
         for (uint8 i = 0; i < diff; ++i)
         {
-            BoundInstancesMap const& m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(player->GetGUID(), Difficulty(i));
-            for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();)
+            for (std::vector<Player *>::iterator member = members.begin(); member != members.end(); ++member)
             {
-                if (itr->first != player->GetMapId())
+                if (*member)
                 {
-                    sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUID(), itr->first, Difficulty(i), true, player);
-                    itr = m_boundInstances.begin();
+                    BoundInstancesMap const &m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(member->GetGUID(), Difficulty(i));
+                    for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();)
+                    {
+                        if (itr->first != member->GetMapId())
+                        {
+                            sInstanceSaveMgr->PlayerUnbindInstance(member->GetGUID(), itr->first, Difficulty(i), true, member);
+                            itr = m_boundInstances.begin();
+                        }
+                        else
+                            ++itr;
+                    }
                 }
-                else
-                    ++itr;
             }
         }
 
